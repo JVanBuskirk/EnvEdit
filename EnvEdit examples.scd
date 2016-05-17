@@ -1,7 +1,7 @@
 //Envelope GUI.
 //Control-click adds a node
 //Delete key deletes the node
-//Option=click and drag changes the slope.
+//Option click and drag changes the slope.
 //Double click sets the release node.
 
 //This is a work in progress.  Jeremy Van Buskirk - jeremyvanb@yahoo.com

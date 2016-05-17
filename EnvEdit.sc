@@ -17,6 +17,8 @@ EnvEdit {
 	}
 
 	init {arg env, parent, bounds, range, duration;
+		var p1, p2, envAdd, order, time, level, slopeOrder;
+		var slopePoint, slopeSpec;
 		rangeSet=range;
 		durationSet=duration;
 		if(parent.isNil){
@@ -64,7 +66,6 @@ EnvEdit {
 		})
              .mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
 			     if(buttonNumber == 1){
-		             var p1, p2, envAdd, order, time, level, slopeOrder;
 		             spec = ControlSpec(window.bounds.height-15, 0, step: 0.001);
 		             p1 = x/(window.bounds.width-15);
 		             p2 = spec.unmap(y);
@@ -93,7 +94,6 @@ EnvEdit {
 				             }
 			         };
 			     if(modifiers == 524288){
-				     var slopePoint, slopeSpec;
 				     slopeSpec = [20, -20].asSpec;
 				     node = envView.selection;
 				     envView.setEditable(node[0], false);
