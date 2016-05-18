@@ -1,8 +1,9 @@
 //Envelope GUI.
-//Control-click adds a node
-//Delete key deletes the node
-//Option click and drag changes the slope.
-//Double click sets the release node.
+//Add Node - Control-click
+//Delete node - delete key
+//Change slope - Select Node. Then Option-click and drag.
+//Delete slope - Shift-click on beginning node.
+//Add or remove a release node - Double click.
 
 //This is a work in progress.  Jeremy Van Buskirk - jeremyvanb@yahoo.com
 
@@ -12,7 +13,7 @@ e.asEnv.postcs;
 
 e.asEnv.test;
 
-
+//Add to a window.
 (
 w = Window.new;
 w.addFlowLayout();
@@ -24,41 +25,43 @@ d = EnvEdit(parent: w.view, bounds: 180@125);
 w.front;
 )
 
-c.asEnv.duration_(8).test;
-
-d.asEnv.duration_(8).test;
 
 
-//You can add a releaseNode
-b.releaseNode_(2);
-
-//You can also set the env.
+//You can also set the env. You can not set curve or releaseNode via Env currently.
+//Cure and releaseNode must be set using the GUI
 g = EnvEdit(Env([ 0.0, 1.0, 0.0 ], [ 0.5, 0.5 ]));
 
-g.asEnv.test;
 
-g.asEnv.postcs;
+//GUI range will automatically be set between the min. and max. levels.
+//GUI duration is set to total duration
+
+n = EnvEdit(Env([ 20.0, 800.0, 20.0 ], [ 1.5, 0.5 ]));
 
 
-//Here is everything together.
 
-(
-w = Window.new.front;
+//Examples with sound.
 
-g = EnvEdit(Env([ 0.0, 1.0, 0.0 ], [ 0.5, 0.5 ]), w, 180@125);
-)
+//amplitude Env.
 
-g.asEnv.test;
 
+g = EnvEdit(Env([ 0.0, 1.0, 0.0 ], [ 0.5, 0.5 ]));
 
 (
 {
-    var env = Env([0, 1, 0.5, 1, 0], [0.01, 0.5, 0.02, 0.5]);
 	    SinOsc.ar(470) * EnvGen.kr(g.asEnv, doneAction: 2)
 }.play
 )
 
-//You can set an range and duration.  If you set give a Env as an argument, range will scale the env.
+//Frequency Env.
 
-h = EnvEdit(Env([0, 0.5, 0], [3.5, 3.5]), range: [100, 400], duration: 7);
+
+
+f = EnvEdit(Env([ 100.0, 400.0, 250.0 ], [ 4.5, 3.5, 2.3 ]));
+
+(
+{
+	    SinOsc.ar(EnvGen.kr(f.asEnv, doneAction: 2))
+}.play
+)
+
 

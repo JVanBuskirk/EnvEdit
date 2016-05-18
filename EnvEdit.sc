@@ -1,8 +1,8 @@
 //Envelope GUI.
 //Control-click adds a node
 //Delete key deletes the node
-//Option=click and drag changes the slope.
-//Double click sets the release node.
+//Option-click and drag changes the slope.
+//Double-click sets the release node.
 
 //This is a work in progress.  Jeremy Van Buskirk - jeremyvanb@yahoo.com
 
@@ -18,7 +18,8 @@ EnvEdit {
 
 	init {arg env, parent, bounds, range, duration;
 		var p1, p2, envAdd, order, time, level, slopeOrder;
-		var slopePoint, slopeSpec;
+		var slopePoint, slopeSpec, levelsArray;
+
 		rangeSet=range;
 		durationSet=duration;
 		if(parent.isNil){
@@ -41,9 +42,16 @@ EnvEdit {
 			slope = [0, 0, 0];
 			envView.value_(envelope)
 			},{
+				//set GUI range and duration from env
+				levelsArray = env.levels;
+				rangeSet = [levelsArray[levelsArray.minIndex], levelsArray[levelsArray.maxIndex]];
+				durationSet = env.duration;
+				//EnvelopeView needs levels normalized to set range properly.
+				env = env.levels_(levelsArray.normalize);
 				envView.setEnv(env);
-				envelope = envView.value;
+				envelope = envView.value; //EnvelopeView seems to return values scaled between 0-1
 				slope = [0, 0, 0, 0];
+
 			}
 		);
 
@@ -61,7 +69,7 @@ EnvEdit {
 		     .action_({arg envView;
 			envView.setString(envView.selection[0],
 				[envView.y.round(0.001).linlin(0, 1, rangeSet[0], rangeSet[1]),
-					envView.x.round(0.001).linlin(0, 1, 0, duration)].asString);
+					envView.x.round(0.001).linlin(0, 1, 0, durationSet)].asString);
 			    envelope=envView.value;
 		})
              .mouseDownAction_({|view, x, y, modifiers, buttonNumber, clickCount|
@@ -154,8 +162,6 @@ EnvEdit {
 }
 
 
-//maybe use a gui method so they can open an close the gui.  - maybe
 //I am using node and envView.selection.  Pick one.
 //I need a check if bounds is nil.
 //I need a method to change the resize.
-//I need a way to scale given Env that are not 0-1 to range;
