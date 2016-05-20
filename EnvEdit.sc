@@ -12,16 +12,16 @@
 EnvEdit {
 	var window, spec, envView, envelope, slope, node=nil, newNode, releaseNode=nil, container, <rangeSet, <durationSet;
 
-	*new {arg env, parent, bounds, range = [0, 1], duration=1;
-		^super.new.init(env, parent, bounds, range, duration);
+	*new {arg env, parent, bounds;//, range = [0, 1], duration=1;
+		^super.new.init(env, parent, bounds);//, range, duration);
 	}
 
-	init {arg env, parent, bounds, range, duration;
+	init {arg env, parent, bounds;//, range, duration;
 		var p1, p2, envAdd, order, time, level, slopeOrder;
 		var slopePoint, slopeSpec, levelsArray;
 
-		rangeSet=range;
-		durationSet=duration;
+		//rangeSet=range;
+		//durationSet=duration;
 		if(parent.isNil){
 			window = Window("envelope",
 				Rect(150 , Window.screenBounds.height - 250, 250, 100)).front;
@@ -40,7 +40,9 @@ EnvEdit {
 		if(env.isNil, {
 			envelope = [[0.0,0.5,1],[0.0, 1.0, 0.0 ]];
 			slope = [0, 0, 0];
-			envView.value_(envelope)
+			envView.value_(envelope);
+			rangeSet = [0, 1];
+			durationSet = 1;
 			},{
 				//set GUI range and duration from env
 				levelsArray = env.levels;
@@ -50,7 +52,9 @@ EnvEdit {
 				env = env.levels_(levelsArray.normalize);
 				envView.setEnv(env);
 				envelope = envView.value; //EnvelopeView seems to return values scaled between 0-1
-				slope = [0, 0, 0, 0];
+				slope = env.curves;
+					if(slope.isSymbol, {},
+						{slope = slope.add(0)});
 
 			}
 		);
@@ -148,6 +152,7 @@ EnvEdit {
 
 	asEnv {
 		var envSet, envOrder;
+		//.flop adds an extra curve and this is is what Env.xyc expects
 		envOrder = (envelope ++ [slope]).flop;
 		if(releaseNode.isNil){
 			envSet = Env.xyc(envOrder);
