@@ -12,13 +12,13 @@
 EnvEdit {
 	var window, spec, envView, envelope, slope, node=nil, newNode, releaseNode=nil, container, <rangeSet, <durationSet;
 
-	*new {arg env, parent, bounds;//, range = [0, 1], duration=1;
+	*new {arg env, parent, bounds=180@125;//, range = [0, 1], duration=1;
 		^super.new.init(env, parent, bounds);//, range, duration);
 	}
 
 	init {arg env, parent, bounds;//, range, duration;
 		var p1, p2, envAdd, order, time, level, slopeOrder;
-		var slopePoint, slopeSpec, levelsArray;
+		var slopePoint, slopeSpec, levelsArray, curveType = 0;
 
 		//rangeSet=range;
 		//durationSet=duration;
@@ -53,9 +53,12 @@ EnvEdit {
 				envView.setEnv(env);
 				envelope = envView.value; //EnvelopeView seems to return values scaled between 0-1
 				slope = env.curves;
-					if(slope.isSymbol, {},
-						{slope = slope.add(0)});
-
+					if(slope.isSymbol, {
+						slope = slope.asArray;
+						slope = slope.resamp0(env.times.size+1);
+						curveType = slope[0];
+					},{
+						slope = slope.add(0)});
 			}
 		);
 
@@ -85,11 +88,11 @@ EnvEdit {
 				     slopeOrder = [];
 		             envAdd[0] = envelope[0].add(p1);
 		             envAdd[1]= envelope[1].add(p2.value);
-				     slopeOrder = slope.add(0);
+				     slopeOrder = slope.add(curveType);
 		             order=envAdd[0].order;
 		             time = envAdd[0][order];
 		             level = envAdd[1][order];
-				     slope = slopeOrder[order];
+				     slope = slopeOrder[order].postcs;
 				     envView.curves = slope;
 		             envAdd = [time, level];
 		             envView.value_(envAdd);

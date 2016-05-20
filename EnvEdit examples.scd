@@ -48,22 +48,26 @@ n = EnvEdit(Env([ 20.0, 800.0, 400, 20.0 ], [ 1.5, 0.5, 1 ], [3, -3, 3]));
 
 //amplitude Env.
 
-g = EnvEdit(Env([ 0.0, 1.0, 0.0 ], [ 0.5, 0.5 ], \sin));
-
 (
-{
-	    SinOsc.ar(470) * EnvGen.kr(g.asEnv, doneAction: 2)
-}.play
+var button, envel;
+w = Window.new("Ampiltude Envelope");
+w.addFlowLayout();
+envel = EnvEdit(Env([ 0.0, 1.0, 0.0 ], [ 0.5, 0.5 ], \sin), w.view );
+button = Button(w, 80@40)
+	.states_([["Play", Color.black]])
+	.action_({{SinOsc.ar(470) * EnvGen.kr(envel.asEnv, doneAction: 2)}.play});
+w.front;
 )
-
 
 //Frequency Env.
 
-f = EnvEdit(Env([ 100.0, 400.0, 250.0, 100 ], [ 4.5, 3.5, 2.3], [3, 3, 3]));
-f.asEnv.postcs;
-
 (
-{
-	    SinOsc.ar(EnvGen.kr(f.asEnv, doneAction: 2))
-}.play
+var button, envel;
+w = Window.new("Frequency Envelope");
+w.addFlowLayout();
+envel = EnvEdit(Env([ 100.0, 400.0, 250.0, 100 ], [ 4.5, 3.5, 2.3], [3, 3, 3]), w.view );
+button = Button(w, 80@40)
+	.states_([["Play", Color.black]])
+	.action_({{SinOsc.ar(EnvGen.kr(envel.asEnv, doneAction: 2))}.play});
+w.front;
 )
