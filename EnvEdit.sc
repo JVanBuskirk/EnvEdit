@@ -92,7 +92,7 @@ EnvEdit {
 		             order=envAdd[0].order;
 		             time = envAdd[0][order];
 		             level = envAdd[1][order];
-				     slope = slopeOrder[order].postcs;
+				     slope = slopeOrder[order];
 				     envView.curves = slope;
 		             envAdd = [time, level];
 		             envView.value_(envAdd);
